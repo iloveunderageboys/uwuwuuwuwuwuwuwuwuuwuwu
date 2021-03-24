@@ -327,7 +327,7 @@ local functions = {
 				local bruteforce = {
 					["LEFT"] = {
 						[0] = 46,
-						[1] = -27,
+						[1] = -28,
 						-- TEST
 						[2] = 30,
 						[3] = 35,
@@ -337,8 +337,8 @@ local functions = {
 						[7] = client_random_int(22, 46),
 					},
 					["RIGHT"] = {
-						[0] = -35,
-						[1] = 27,
+						[0] = 46,
+						[1] = -35,
 						-- TEST
 						[2] = client_random_int(-30, 46),
 						[3] = client_random_int(40, 60),
@@ -348,8 +348,8 @@ local functions = {
 						[7] = client_random_int(22, 46),
 					},
 					["UNK"] = {
-						[0] = -25,
-						[1] = 25,
+						[0] = 22,
+						[1] = 20,
 						-- TEST
 						[2] = 37,
 						[3] = -22,
@@ -359,20 +359,20 @@ local functions = {
 						[7] = -52,
 					}
 				}
-				if(me_animstate.m_flEyeYaw ~= nil and me_animstate.m_flEyeYaw > 20 and m_flDuckAmount == 0) then -- solow walk lowoowow
-					plist_set(ent, "Force body yaw value", me_animstate.m_flEyeYaw + body_yaw)
-				end
-				if velocity > 14 and velocity < 110 and m_flDuckAmount == 0 and misses[ent] and misses[ent] < 8 and bruteforce[player_data[ent]] then
-					is_lowdelta = true
-					plist_set(ent, "Force body yaw value", 25)
-				end
-
-				plist_set(ent, "Force body yaw", is_lowdelta)
-				return true, (is_lowdelta and misses[ent] >= 0 and misses[ent] < 1) and "LOWDELTA"
-				end)
-				client_set_event_callback("round_start", function(e)
-				misses = {}
-				end)
+                if(me_animstate.m_flEyeYaw ~= nil and me_animstate.m_flEyeYaw > 20 and m_flDuckAmount == 0) then -- solow walk lowoowow
+                    plist.set(ent, "Force body yaw value", me_animstate.m_flEyeYaw + body_yaw)
+                end
+                if velocity > 14 and velocity < 110 and m_flDuckAmount == 0 and misses[ent] and misses[ent] < 8 and bruteforce[player_data[ent]] then
+                    is_lowdelta = true
+                    plist.set(ent, "Force body yaw value", bruteforce[player_data[ent]][misses[ent]])
+                end
+            
+                plist.set(ent, "Force body yaw", is_lowdelta)
+                return true, (is_lowdelta and misses[ent] >= 0 and misses[ent] < 1) and "LOWDELTA"
+            end)
+            client.set_event_callback("round_start", function(e)
+                misses = {}
+            end)
 
 
 				client_set_event_callback("player_death", function(e)
